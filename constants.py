@@ -32,3 +32,39 @@ COURSES = [
                   resource_name='Jostens',
                   resource_url='http://yearbookavenue.jostens.com/'),
     ]
+
+
+import song
+
+Top_Ten_Songs= [
+    song.Song(title='Blood Sweat Tears',
+              artist_name='BTS',
+              youtube_url='https://www.youtube.com/watch?v=hmE9f-TEutc'),
+    song.Song(title='Mic drop',
+              artist_name='BTS',
+              youtube_url='https://www.youtube.com/watch?v=kTlv5_Bs8aw'),
+    song.Song(title='Bad Boy',
+              artist_name='Red Velvet',
+              youtube_url='https://www.youtube.com/watch?v=J_CFBjAyPWE'),
+    song.Song(title='Starry Night',
+              artist_name='Mamamoo',
+              youtube_url='https://www.youtube.com/watch?v=0FB2EoKTK_Q'),
+    song.Song(title='Peek-a-boo',
+              artist_name='Red Velvet',
+              youtube_url='https://www.youtube.com/watch?v=6uJf2IT2Zh8'),
+    song.Song(title='In My Blood',
+              artist_name='Shawn Mendes',
+              youtube_url='https://www.youtube.com/watch?v=36tggrpRoTI'),
+    song.Song(title='No Tears Left to Cry',
+              artist_name='Ariana Grande',
+              youtube_url='https://www.youtube.com/watch?v=ffxKSjUwKdU'),
+    song.Song(title='Never Be Same',
+              artist_name='Camila Cabello',
+              youtube_url='https://www.youtube.com/watch?v=Ph54wQG8ynk'),
+    song.Song(title='Likey',
+              artist_name='Twice',
+              youtube_url='https://www.youtube.com/watch?v=V2hlQkVJZhE'),
+    song.Song(title='Ko Ko Bop',
+              artist_name='Exo',
+              youtube_url='https://www.youtube.com/watch?v=IdssuxDdqKk'),
+]
