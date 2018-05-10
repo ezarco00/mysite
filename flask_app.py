@@ -1,6 +1,5 @@
 from flask import Flask
 from flask import render_template
-import constants
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -17,8 +16,8 @@ class Course(db.Model):
 
 class Song(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.Integer(80))
-    artist = db.Column(db.String(80))
+    title = db.Column(db.String(80))
+    artist_name = db.Column(db.String(80))
     youtube_url = db.Column(db.String(300))
 
 @app.route('/')
