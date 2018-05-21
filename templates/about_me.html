@@ -1,8 +1,9 @@
-<html>
-    <head>
-        <title>About Me</title>
-        <link rel="stylesheet" type="text/css" href="mystyle.css">
-    </head>
+{% extends "base.html" %}
+
+{% block title %}About_Me{% endblock %}
+
+{% block content %}
+<div class="container">
     <body>
         <h2>About Me</h2>
         <p>I am a highschool studentMy birthday is November 14. I am 17 years old.
@@ -16,4 +17,5 @@
          </ul>
          <img src="static/images/drawing.jpg">
     </body>
-</html>
+</div>
+{% endblock %}

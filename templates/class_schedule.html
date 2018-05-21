@@ -3,6 +3,7 @@
 {% block title %}class_schedule{% endblock %}
 
 {% block content %}
+<div class="container">
         <table class="table table-striped">
             <tr>
                 <th>Period</th>
@@ -18,7 +19,6 @@
                 <td><a href="{{ course.resource_url }}">{{ course.resource_name }}</a></td>
               </tr>
             {% endfor %}
-
         </table>
-
+</div>
 {% endblock %}
