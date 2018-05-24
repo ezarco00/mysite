@@ -28,6 +28,8 @@ from wtforms.validators import ValidationError
 
 from flask import flash
 
+from flask_login import LoginManager, UserMixin, current_user, login_user, logout_user
+
 class RegistrationForm(FlaskForm):
     username = StringField(
         'Username', validators=[InputRequired(), Length(min=4, max=15)])
@@ -46,23 +48,9 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[InputRequired()])
     submit = SubmitField('Sign in')
 
-nav = Nav(app)
-@nav.navigation('mysite_navbar')
-def create_navbar():
-    home_view = View('Home', 'homepage')
-    login_view = View('Login', 'login')
-    register_view = View('Register', 'register')
-    about_me_view = View('About Me', 'about_me')
-    class_schedule_view = View('Class Schedule', 'class_schedule')
-    top_ten_songs_view = View('Top Ten Songs', 'top_ten_songs')
-    misc_subgroup = Subgroup('Misc',
-                             about_me_view,
-                             class_schedule_view,
-                             top_ten_songs_view)
-    return Navbar('MySite', home_view, misc_subgroup, login_view, register_view)
-
 app.config.from_object('config.BaseConfig')
 db = SQLAlchemy(app)
+login = LoginManager(app)
 Bootstrap(app)
 class Course(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -78,7 +66,7 @@ class Song(db.Model):
     artist_name = db.Column(db.String(80))
     youtube_url = db.Column(db.String(300))
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(15))
     email = db.Column(db.String(150))
@@ -90,19 +78,26 @@ class User(db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-@app.route('/')
+@login.user_loader
+def load_user(user_id):
+    return User.query.filter_by(id=int(user_id)).first()
+
+@app.route('/homepage')
 def homepage():
-    return 'Hello from Emely'
+    return render_template('index.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('homepage'))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if not user or not user.check_password(form.password.data):
             flash('Username or password is incorrect.', 'danger')
             return render_template('login.html', form=form)
-        return 'Welcome ' + user.username + '!'
+        login_user(user)
+        return redirect(url_for('homepage'))
     return render_template('login.html', form=form)
 
 @app.route('/about_me')
@@ -119,8 +114,14 @@ def register():
         new_user.set_password(form.password.data)
         db.session.add(new_user)
         db.session.commit()
+        login_user(new_user)
         return redirect(url_for('homepage'))
     return render_template('register.html', form=form)
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('homepage'))
 
 @app.route('/class_schedule')
 def class_schedule():
@@ -132,5 +133,26 @@ def top_ten_songs():
     songs = Song.query.all()
     return render_template('top_ten_songs.html',
                            songs=songs)
+
+nav = Nav(app)
+@nav.navigation('mysite_navbar')
+def create_navbar():
+    home_view = View('Home', 'homepage')
+    login_view = View('Login', 'login')
+    logout_view = View('Logout', 'logout')
+    register_view = View('Register', 'register')
+    about_me_view = View('About Me', 'about_me')
+    class_schedule_view = View('Class Schedule', 'class_schedule')
+    top_ten_songs_view = View('Top Ten Songs', 'top_ten_songs')
+    misc_subgroup = Subgroup('Misc',
+                             about_me_view,
+                             class_schedule_view,
+                             top_ten_songs_view)
+    if current_user.is_authenticated:
+        return Navbar('MySite', home_view, misc_subgroup, logout_view)
+    else:
+        return Navbar('MySite', home_view, misc_subgroup, login_view, register_view)
+
+
 if __name__ == '__main__':
   db.create_all()
